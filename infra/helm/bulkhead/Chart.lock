@@ -1,0 +1,24 @@
+dependencies:
+- name: postgres
+  repository: file://../postgres
+  version: 0.1.0
+- name: minio
+  repository: file://../minio
+  version: 0.1.0
+- name: lakefs
+  repository: file://../lakefs
+  version: 0.1.0
+- name: ollama
+  repository: file://../ollama
+  version: 0.1.0
+- name: ingestion-service
+  repository: file://../ingestion-service
+  version: 0.1.0
+- name: retrieval-service
+  repository: file://../retrieval-service
+  version: 0.1.0
+- name: query-api
+  repository: file://../query-api
+  version: 0.1.0
+digest: sha256:69c2026bc1d698ba5c909c273c8fce0e4b25f2e50e0bfec92ef500092c0b9c63
+generated: "2026-08-24T23:56:02.345959-07:00"

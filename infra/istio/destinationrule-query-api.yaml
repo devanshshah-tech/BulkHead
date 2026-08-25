@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: query-api
+  namespace: bulkhead
+spec:
+  host: query-api
+  trafficPolicy:
+    connectionPool:
+      http:
+        http2MaxRequests: 100
+        maxRequestsPerConnection: 10
+    outlierDetection:
+      consecutive5xxErrors: 3
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50

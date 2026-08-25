@@ -1,0 +1,29 @@
+apiVersion: v2
+name: bulkhead
+description: Bulkhead — airgap-deployable RAG platform (umbrella chart)
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: postgres
+    version: 0.1.0
+    repository: file://../postgres
+  - name: minio
+    version: 0.1.0
+    repository: file://../minio
+  - name: lakefs
+    version: 0.1.0
+    repository: file://../lakefs
+  - name: ollama
+    version: 0.1.0
+    repository: file://../ollama
+    condition: ollama.enabled
+  - name: ingestion-service
+    version: 0.1.0
+    repository: file://../ingestion-service
+  - name: retrieval-service
+    version: 0.1.0
+    repository: file://../retrieval-service
+  - name: query-api
+    version: 0.1.0
+    repository: file://../query-api

@@ -1,0 +1,5 @@
+apiVersion: v2
+name: minio
+description: MinIO object storage for Bulkhead (raw documents and artifacts)
+version: 0.1.0
+appVersion: "RELEASE.2024-12-18"

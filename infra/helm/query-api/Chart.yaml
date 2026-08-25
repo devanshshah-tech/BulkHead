@@ -1,0 +1,5 @@
+apiVersion: v2
+name: query-api
+description: Bulkhead public query API (grounded answers with citations)
+version: 0.1.0
+appVersion: "0.1.0"

@@ -1,0 +1,26 @@
+image:
+  repository: pgvector/pgvector
+  tag: pg16
+  pullPolicy: IfNotPresent
+
+auth:
+  username: bulkhead_dev
+  password: bulkhead-dev-password
+
+databases:
+  - vectors
+  - audit
+
+storage:
+  size: 2Gi
+  storageClassName: ""
+
+service:
+  port: 5432
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 1Gi

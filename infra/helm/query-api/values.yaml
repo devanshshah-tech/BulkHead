@@ -1,0 +1,16 @@
+image:
+  repository: bulkhead/query-api
+  tag: dev
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+port: 8002
+
+env: {}
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 512Mi

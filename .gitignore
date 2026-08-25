@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Go
+apps/retrieval-service/bin/
+
+# Generated protobuf code is committed, but local build artifacts are not
+build/
+dist/
+*.tar.zst
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.example.tfvars
+override.tf
+override.tf.json
+
+# Kubernetes / cluster tooling state
+.kubeconfig
+k3d-*.yaml
+*.kubeconfig
+tilt_state/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key

@@ -1,0 +1,48 @@
+# Local development against k3d.
+# Images are imported directly into the cluster (k3d image import) — no registry.
+# Ollama runs on the HOST (reachable via host.k3d.internal), not in the cluster.
+
+ollama:
+  enabled: false
+
+postgres:
+  storage:
+    size: 1Gi
+
+minio:
+  storage:
+    size: 2Gi
+
+lakefs:
+  storage:
+    size: 1Gi
+
+ingestion-service:
+  image:
+    repository: bulkhead/ingestion-service
+    tag: dev
+    pullPolicy: IfNotPresent
+  env:
+    BULKHEAD_INGEST_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/vectors
+    BULKHEAD_INGEST_AUDIT_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/audit
+    BULKHEAD_INGEST_S3_ENDPOINT_URL: http://minio:9000
+    BULKHEAD_INGEST_S3_BUCKET: corpus
+    BULKHEAD_INGEST_S3_ACCESS_KEY: bulkhead
+    BULKHEAD_INGEST_S3_SECRET_KEY: bulkhead-dev-password
+    BULKHEAD_INGEST_LAKEFS_ENDPOINT: http://lakefs:8000
+    BULKHEAD_INGEST_LAKEFS_REPO: corpus
+
+retrieval-service:
+  image:
+    repository: bulkhead/retrieval-service
+    tag: dev
+    pullPolicy: IfNotPresent
+
+query-api:
+  image:
+    repository: bulkhead/query-api
+    tag: dev
+    pullPolicy: IfNotPresent
+  env:
+    BULKHEAD_QUERY_INFERENCE_BACKEND: ollama
+    BULKHEAD_QUERY_OLLAMA_URL: http://host.k3d.internal:11434

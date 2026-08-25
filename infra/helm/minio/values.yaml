@@ -1,0 +1,23 @@
+image:
+  repository: minio/minio
+  tag: RELEASE.2024-12-18T13-15-44Z
+  pullPolicy: IfNotPresent
+
+auth:
+  rootUser: bulkhead
+  rootPassword: bulkhead-dev-password
+
+storage:
+  size: 5Gi
+  storageClassName: ""
+
+service:
+  port: 9000
+  consolePort: 9001
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 1Gi

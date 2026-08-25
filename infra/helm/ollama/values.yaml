@@ -1,0 +1,26 @@
+enabled: true
+
+image:
+  repository: ollama/ollama
+  tag: "0.5.7"
+  pullPolicy: IfNotPresent
+
+models:
+  pull:
+    enabled: true
+  list:
+    - llama3.2:3b
+
+storage:
+  size: 20Gi
+  storageClassName: ""
+
+service:
+  port: 11434
+
+resources:
+  requests:
+    cpu: "1"
+    memory: 4Gi
+  limits:
+    memory: 12Gi

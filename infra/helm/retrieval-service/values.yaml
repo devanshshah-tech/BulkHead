@@ -1,0 +1,16 @@
+image:
+  repository: bulkhead/retrieval-service
+  tag: dev
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+port: 50051
+
+env: {}
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    memory: 256Mi

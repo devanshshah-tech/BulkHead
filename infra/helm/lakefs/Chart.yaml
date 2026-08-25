@@ -1,0 +1,5 @@
+apiVersion: v2
+name: lakefs
+description: lakeFS corpus versioning for Bulkhead (local KV + local blockstore)
+version: 0.1.0
+appVersion: "1.86.0"

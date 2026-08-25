@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lakefs.name" . }}
+  labels:
+    {{- include "lakefs.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{ include "lakefs.name" . }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http

@@ -1,0 +1,36 @@
+# Base values — environment-specific overrides live in values-<env>.yaml.
+# All secrets shown here are DEV PLACEHOLDERS; production/airgap deployments
+# must supply real credentials out-of-band.
+
+postgres:
+  auth:
+    username: bulkhead_dev
+    password: bulkhead-dev-password
+
+minio:
+  auth:
+    rootUser: bulkhead
+    rootPassword: bulkhead-dev-password
+
+lakefs:
+  encryptSecretKey: bulkhead-dev-encrypt-key
+
+ollama:
+  models:
+    pull:
+      enabled: false
+
+ingestion-service:
+  env:
+    BULKHEAD_INGEST_EMBEDDER_BACKEND: sentence-transformers
+    BULKHEAD_INGEST_LAKEFS_ENABLED: "false"
+
+retrieval-service:
+  env:
+    RETRIEVAL_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/vectors
+    RETRIEVAL_EMBED_ENDPOINT: http://ingestion-service:8001/internal/embeddings
+
+query-api:
+  env:
+    BULKHEAD_QUERY_RETRIEVAL_ADDRESS: retrieval-service:50051
+    BULKHEAD_QUERY_AUDIT_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/audit

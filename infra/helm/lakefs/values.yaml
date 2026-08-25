@@ -1,0 +1,20 @@
+image:
+  repository: treeverse/lakefs
+  tag: "1.86.0"
+  pullPolicy: IfNotPresent
+
+encryptSecretKey: bulkhead-dev-encrypt-key
+
+storage:
+  size: 2Gi
+  storageClassName: ""
+
+service:
+  port: 8000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 1Gi

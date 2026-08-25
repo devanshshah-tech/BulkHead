@@ -1,0 +1,77 @@
+# Bulkhead — reproducible toolchain + task runner
+# Install everything:  mise install
+# List tasks:          mise run (no args)
+
+[tools]
+# Languages
+python = "3.12"
+go = "1.25"
+uv = "0.5"
+
+# Platform tooling
+terraform = "1.9"
+helm = "3.16"
+kubectl = "1.31"
+k3d = "5.7"
+tilt = "0.33"
+buf = "1.47"
+istioctl = "1.30"
+
+# Airgap packaging (versions to be re-verified when Phase 4 lands)
+"ubi:zarf-dev/zarf" = "0.58"
+"ubi:uds-cli/uds" = "0.30"
+"ubi:argoproj/argo-cd" = "2.14"
+
+[settings]
+python.venv_auto_create = false
+
+# ---------------------------------------------------------------------------
+# Tasks
+# ---------------------------------------------------------------------------
+
+[tasks.lint]
+description = "Lint all services (ruff for Python, gofmt/vet for Go)"
+run = [
+  "uv run --directory apps/ingestion-service ruff check .",
+  "uv run --directory apps/ingestion-service ruff format --check .",
+  "uv run --directory apps/query-api ruff check .",
+  "uv run --directory apps/query-api ruff format --check .",
+  "gofmt -l apps/retrieval-service | (! grep .)",
+  "cd apps/retrieval-service && go vet ./...",
+]
+
+[tasks.test]
+description = "Run all unit tests"
+run = [
+  "uv run --directory apps/ingestion-service pytest -q",
+  "uv run --directory apps/query-api pytest -q",
+  "cd apps/retrieval-service && go test ./...",
+]
+
+[tasks.proto]
+description = "Regenerate gRPC stubs from proto/ (buf generate)"
+run = "buf generate"
+
+[tasks.build]
+description = "Build all container images locally"
+run = "./hack/build-images.sh"
+
+[tasks.dev]
+description = "Inner dev loop: tilt up against local k3d cluster"
+run = "tilt up"
+
+[tasks."deploy:local"]
+description = "Create local k3d cluster and deploy via Helm"
+run = "./hack/deploy-local.sh"
+
+[tasks.package]
+description = "Build Zarf packages + UDS airgap bundle (Phase 4)"
+run = "./hack/package.sh"
+
+[tasks."deploy:airgap"]
+description = "Deploy the UDS bundle to an offline cluster (Phase 4)"
+run = "./hack/deploy-airgap.sh"
+
+[tasks."deploy:demo"]
+description = "Terraform apply + ArgoCD sync for the connected demo (Phases 5-6)"
+run = "./hack/deploy-demo.sh"

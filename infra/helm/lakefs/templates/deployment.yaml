@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lakefs.name" . }}
+  labels:
+    {{- include "lakefs.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "lakefs.name" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "lakefs.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        fsGroup: 10001
+      containers:
+        - name: lakefs
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+          env:
+            - name: LAKEFS_DATABASE_TYPE
+              value: local
+            - name: LAKEFS_DATABASE_LOCAL_PATH
+              value: /data/kv
+            - name: LAKEFS_BLOCKSTORE_TYPE
+              value: local
+            - name: LAKEFS_BLOCKSTORE_LOCAL_PATH
+              value: /data/blockstore
+          envFrom:
+            - secretRef:
+                name: {{ include "lakefs.name" . }}-auth
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "lakefs.name" . }}-data

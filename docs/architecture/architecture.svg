@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 940" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-dash" markerWidth="10" markerHeight="10" refX="9" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#6366f1"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1320" height="940" fill="#ffffff"/>
+
+  <text x="660" y="42" text-anchor="middle" font-size="22" font-weight="bold" fill="#0f172a">Bulkhead — Airgap-Deployable RAG Platform</text>
+  <text x="660" y="66" text-anchor="middle" font-size="13" fill="#64748b">REST/GraphQL at the edge, gRPC internally, zero external calls at runtime</text>
+
+  <!-- ===================== external actors ===================== -->
+  <rect x="360" y="92" width="220" height="56" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="470" y="115" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">User / Client</text>
+  <text x="470" y="134" text-anchor="middle" font-size="11" fill="#64748b">HTTPS via Istio Gateway</text>
+
+  <rect x="1060" y="92" width="220" height="72" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="1170" y="118" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">Git repository</text>
+  <text x="1170" y="138" text-anchor="middle" font-size="11" fill="#64748b">Helm charts, values,</text>
+  <text x="1170" y="153" text-anchor="middle" font-size="11" fill="#64748b">ArgoCD manifests</text>
+
+  <!-- ===================== cluster boundary ===================== -->
+  <rect x="60" y="196" width="950" height="640" rx="16" fill="#eef2ff" stroke="#6366f1" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="84" y="224" font-size="14" font-weight="bold" fill="#4338ca">Kubernetes cluster (k3d local / k3s demo)</text>
+  <text x="84" y="243" font-size="11" fill="#6366f1">Istio service mesh — STRICT mTLS between all workloads</text>
+
+  <!-- ArgoCD -->
+  <rect x="740" y="230" width="240" height="62" rx="10" fill="#fdf4ff" stroke="#c026d3" stroke-width="1.5"/>
+  <text x="860" y="255" text-anchor="middle" font-size="13" font-weight="bold" fill="#86198f">ArgoCD (GitOps)</text>
+  <text x="860" y="274" text-anchor="middle" font-size="11" fill="#a21caf">App-of-Apps, reconciles from Git</text>
+
+  <!-- Istio gateway -->
+  <rect x="340" y="262" width="260" height="62" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>
+  <text x="470" y="287" text-anchor="middle" font-size="13" font-weight="bold" fill="#9a3412">Istio Ingress Gateway</text>
+  <text x="470" y="306" text-anchor="middle" font-size="11" fill="#c2410c">TLS termination, routing, retries</text>
+
+  <!-- query-api -->
+  <rect x="220" y="376" width="260" height="72" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="401" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">query-api</text>
+  <text x="350" y="420" text-anchor="middle" font-size="11" fill="#64748b">FastAPI · REST + GraphQL</text>
+  <text x="350" y="437" text-anchor="middle" font-size="11" fill="#64748b">/healthz · /readyz</text>
+
+  <!-- ingestion -->
+  <rect x="560" y="376" width="260" height="72" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+  <text x="690" y="401" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">ingestion-service</text>
+  <text x="690" y="420" text-anchor="middle" font-size="11" fill="#64748b">FastAPI · chunk + embed</text>
+  <text x="690" y="437" text-anchor="middle" font-size="11" fill="#64748b">sentence-transformers (local)</text>
+
+  <!-- retrieval -->
+  <rect x="100" y="530" width="260" height="72" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+  <text x="230" y="555" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">retrieval-service</text>
+  <text x="230" y="574" text-anchor="middle" font-size="11" fill="#64748b">Go · gRPC · internal only</text>
+  <text x="230" y="591" text-anchor="middle" font-size="11" fill="#64748b">Retrieve(query) → chunks</text>
+
+  <!-- inference -->
+  <rect x="430" y="530" width="260" height="72" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+  <text x="560" y="555" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">inference</text>
+  <text x="560" y="574" text-anchor="middle" font-size="11" fill="#64748b">Ollama · small quantized LLM</text>
+  <text x="560" y="591" text-anchor="middle" font-size="11" fill="#64748b">runs fully offline</text>
+
+  <!-- postgres -->
+  <rect x="100" y="690" width="260" height="96" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="230" y="716" text-anchor="middle" font-size="13" font-weight="bold" fill="#065f46">PostgreSQL + pgvector</text>
+  <text x="230" y="737" text-anchor="middle" font-size="11" fill="#047857">db: vectors — embeddings + chunks</text>
+  <text x="230" y="754" text-anchor="middle" font-size="11" fill="#047857">db: audit — ingestion/query log</text>
+
+  <!-- minio -->
+  <rect x="430" y="690" width="260" height="72" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="560" y="716" text-anchor="middle" font-size="13" font-weight="bold" fill="#065f46">MinIO</text>
+  <text x="560" y="737" text-anchor="middle" font-size="11" fill="#047857">S3-compatible object storage</text>
+  <text x="560" y="754" text-anchor="middle" font-size="11" fill="#047857">raw docs + model artifacts</text>
+
+  <!-- lakefs -->
+  <rect x="760" y="690" width="220" height="72" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="870" y="716" text-anchor="middle" font-size="13" font-weight="bold" fill="#065f46">lakeFS</text>
+  <text x="870" y="737" text-anchor="middle" font-size="11" fill="#047857">corpus versioning</text>
+  <text x="870" y="754" text-anchor="middle" font-size="11" fill="#047857">"answer ← corpus vN"</text>
+
+  <!-- ===================== edges ===================== -->
+  <!-- user -> gateway -->
+  <line x1="470" y1="148" x2="470" y2="258" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <!-- git -> argocd -->
+  <line x1="1060" y1="140" x2="900" y2="140" stroke="#475569" stroke-width="1.8"/>
+  <line x1="900" y1="140" x2="900" y2="226" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="976" y="128" text-anchor="middle" font-size="11" fill="#475569">poll / webhook</text>
+  <!-- gateway -> query-api -->
+  <line x1="430" y1="324" x2="370" y2="372" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <!-- gateway -> ingestion -->
+  <line x1="520" y1="324" x2="660" y2="372" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="640" y="342" text-anchor="middle" font-size="11" fill="#475569">doc upload</text>
+  <!-- query-api -> retrieval -->
+  <line x1="300" y1="448" x2="245" y2="526" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="220" y="492" text-anchor="middle" font-size="11" fill="#475569">gRPC</text>
+  <!-- query-api -> inference -->
+  <line x1="400" y1="448" x2="540" y2="526" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="510" y="492" text-anchor="middle" font-size="11" fill="#475569">generate</text>
+  <!-- retrieval -> postgres -->
+  <line x1="230" y1="602" x2="230" y2="686" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="252" y="648" font-size="11" fill="#475569">vector search</text>
+  <!-- ingestion -> postgres -->
+  <line x1="600" y1="448" x2="330" y2="700" stroke="#475569" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="428" y="600" font-size="11" fill="#475569">write embeddings</text>
+  <!-- ingestion -> minio -->
+  <line x1="640" y1="448" x2="580" y2="686" stroke="#475569" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="648" y="600" font-size="11" fill="#475569">raw docs</text>
+  <!-- ingestion -> lakefs -->
+  <line x1="740" y1="448" x2="860" y2="686" stroke="#475569" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="848" y="560" font-size="11" fill="#475569">commit corpus</text>
+  <!-- argocd reconcile (dashed, representative) -->
+  <line x1="800" y1="292" x2="700" y2="372" stroke="#6366f1" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrow-dash)"/>
+  <text x="806" y="340" font-size="11" fill="#6366f1">reconcile Helm releases</text>
+
+  <!-- ===================== packaging note ===================== -->
+  <rect x="60" y="860" width="1220" height="56" rx="10" fill="#fefce8" stroke="#eab308" stroke-width="1.5" stroke-dasharray="8 6"/>
+  <text x="670" y="884" text-anchor="middle" font-size="13" font-weight="bold" fill="#854d0e">Airgap delivery: every component above (app images, Ollama weights, pgvector, MinIO, lakeFS) is packaged into Zarf packages →</text>
+  <text x="670" y="903" text-anchor="middle" font-size="13" font-weight="bold" fill="#854d0e">one UDS bundle → bulkhead-rag-bundle.tar.zst → deploys to a fully disconnected cluster with a single command</text>
+</svg>

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package bulkhead.retrieval.v1;
+
+option go_package = "github.com/devanshshah-tech/BulkHead/apps/retrieval-service/gen/bulkhead/retrieval/v1;retrievalv1";
+
+message RetrieveRequest {
+  string query = 1;
+  int32 top_k = 2;
+  string corpus_ref = 3;
+}
+
+message Chunk {
+  string chunk_id = 1;
+  string doc_id = 2;
+  string source = 3;
+  string content = 4;
+  float score = 5;
+  string corpus_commit = 6;
+  int64 ingested_at_unix = 7;
+}
+
+message RetrieveResponse {
+  repeated Chunk chunks = 1;
+}
+
+message HealthzRequest {}
+
+message HealthzResponse {
+  bool database_ok = 1;
+}
+
+service RetrievalService {
+  rpc Retrieve(RetrieveRequest) returns (RetrieveResponse);
+  rpc Healthz(HealthzRequest) returns (HealthzResponse);
+}

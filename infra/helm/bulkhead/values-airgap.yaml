@@ -1,0 +1,24 @@
+# Airgap deployment from the UDS bundle.
+# Images are rewritten to the Zarf-provided registry at package time;
+# no model pulls (weights ship inside the bundle), no external endpoints.
+
+ollama:
+  models:
+    pull:
+      enabled: false
+
+ingestion-service:
+  env:
+    BULKHEAD_INGEST_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/vectors
+    BULKHEAD_INGEST_AUDIT_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/audit
+    BULKHEAD_INGEST_S3_ENDPOINT_URL: http://minio:9000
+    BULKHEAD_INGEST_S3_BUCKET: corpus
+    BULKHEAD_INGEST_S3_ACCESS_KEY: bulkhead
+    BULKHEAD_INGEST_S3_SECRET_KEY: bulkhead-dev-password
+    BULKHEAD_INGEST_LAKEFS_ENDPOINT: http://lakefs:8000
+    BULKHEAD_INGEST_LAKEFS_REPO: corpus
+
+query-api:
+  env:
+    BULKHEAD_QUERY_INFERENCE_BACKEND: ollama
+    BULKHEAD_QUERY_OLLAMA_URL: http://ollama:11434

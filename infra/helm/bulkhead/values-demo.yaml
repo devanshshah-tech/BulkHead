@@ -1,0 +1,44 @@
+# Connected demo on the free-tier cloud VM (k3s + ArgoCD).
+# Images pulled from ghcr.io; same charts as airgap, different delivery.
+
+postgres:
+  storage:
+    size: 5Gi
+
+minio:
+  storage:
+    size: 10Gi
+
+ollama:
+  storage:
+    size: 20Gi
+  models:
+    pull:
+      enabled: true
+
+ingestion-service:
+  image:
+    repository: ghcr.io/devanshshah-tech/bulkhead-ingestion-service
+    tag: latest
+  env:
+    BULKHEAD_INGEST_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/vectors
+    BULKHEAD_INGEST_AUDIT_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/audit
+    BULKHEAD_INGEST_S3_ENDPOINT_URL: http://minio:9000
+    BULKHEAD_INGEST_S3_BUCKET: corpus
+    BULKHEAD_INGEST_S3_ACCESS_KEY: bulkhead
+    BULKHEAD_INGEST_S3_SECRET_KEY: bulkhead-dev-password
+    BULKHEAD_INGEST_LAKEFS_ENDPOINT: http://lakefs:8000
+    BULKHEAD_INGEST_LAKEFS_REPO: corpus
+
+retrieval-service:
+  image:
+    repository: ghcr.io/devanshshah-tech/bulkhead-retrieval-service
+    tag: latest
+
+query-api:
+  image:
+    repository: ghcr.io/devanshshah-tech/bulkhead-query-api
+    tag: latest
+  env:
+    BULKHEAD_QUERY_INFERENCE_BACKEND: ollama
+    BULKHEAD_QUERY_OLLAMA_URL: http://ollama:11434
