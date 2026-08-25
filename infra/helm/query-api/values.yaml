@@ -1,7 +1,7 @@
 image:
   repository: bulkhead/query-api
   tag: dev
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 replicaCount: 1
 port: 8002

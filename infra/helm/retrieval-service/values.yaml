@@ -1,7 +1,7 @@
 image:
   repository: bulkhead/retrieval-service
   tag: dev
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 replicaCount: 1
 port: 50051

@@ -3,7 +3,7 @@ enabled: true
 image:
   repository: ollama/ollama
   tag: "0.5.7"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 models:
   baked: false
