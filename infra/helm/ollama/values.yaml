@@ -6,6 +6,7 @@ image:
   pullPolicy: IfNotPresent
 
 models:
+  baked: false
   pull:
     enabled: true
   list:

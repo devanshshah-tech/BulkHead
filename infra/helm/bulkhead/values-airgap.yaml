@@ -3,12 +3,18 @@
 # no model pulls (weights ship inside the bundle), no external endpoints.
 
 ollama:
+  enabled: true
+  image:
+    repository: ghcr.io/devanshshah-tech/bulkhead-inference
+    tag: latest
   models:
+    baked: true
     pull:
       enabled: false
 
 ingestion-service:
   env:
+    HF_HUB_OFFLINE: "1"
     BULKHEAD_INGEST_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/vectors
     BULKHEAD_INGEST_AUDIT_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/audit
     BULKHEAD_INGEST_S3_ENDPOINT_URL: http://minio:9000

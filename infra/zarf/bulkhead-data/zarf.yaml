@@ -1,0 +1,54 @@
+kind: ZarfPackageConfig
+metadata:
+  name: bulkhead-data
+  description: Data layer of the Bulkhead RAG platform (postgres/pgvector, MinIO, lakeFS, Ollama)
+  version: 0.1.0
+
+variables:
+  - name: INFER_MODEL_TAG
+    default: latest
+
+components:
+  - name: bulkhead-namespace
+    required: true
+    manifests:
+      - name: bulkhead-namespace
+        namespace: bulkhead
+        files:
+          - manifests/namespace.yaml
+
+  - name: postgres
+    required: true
+    images:
+      - pgvector/pgvector:pg16
+    charts:
+      - name: postgres
+        version: 0.1.0
+        namespace: bulkhead
+        localPath: ../../helm/postgres
+        valuesFiles:
+          - values/postgres.yaml
+
+  - name: minio
+    required: true
+    images:
+      - minio/minio:RELEASE.2024-12-18T13-15-44Z
+    charts:
+      - name: minio
+        version: 0.1.0
+        namespace: bulkhead
+        localPath: ../../helm/minio
+        valuesFiles:
+          - values/minio.yaml
+
+  - name: lakefs
+    required: true
+    images:
+      - treeverse/lakefs:1.86.0
+    charts:
+      - name: lakefs
+        version: 0.1.0
+        namespace: bulkhead
+        localPath: ../../helm/lakefs
+        valuesFiles:
+          - values/lakefs.yaml

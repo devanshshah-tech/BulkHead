@@ -1,0 +1,15 @@
+image:
+  repository: ghcr.io/devanshshah-tech/bulkhead-inference
+  tag: latest
+
+models:
+  baked: true
+  pull:
+    enabled: false
+
+resources:
+  requests:
+    cpu: "1"
+    memory: 4Gi
+  limits:
+    memory: 12Gi

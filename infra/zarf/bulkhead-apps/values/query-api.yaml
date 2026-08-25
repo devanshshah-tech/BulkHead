@@ -1,0 +1,7 @@
+replicaCount: 1
+
+env:
+  BULKHEAD_QUERY_RETRIEVAL_ADDRESS: retrieval-service:50051
+  BULKHEAD_QUERY_INFERENCE_BACKEND: ollama
+  BULKHEAD_QUERY_OLLAMA_URL: http://ollama:11434
+  BULKHEAD_QUERY_AUDIT_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/audit

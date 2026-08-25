@@ -1,0 +1,4 @@
+encryptSecretKey: bulkhead-dev-encrypt-key
+
+storage:
+  size: 2Gi

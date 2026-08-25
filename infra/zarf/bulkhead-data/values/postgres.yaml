@@ -1,0 +1,10 @@
+auth:
+  username: bulkhead_dev
+  password: bulkhead-dev-password
+
+databases:
+  - vectors
+  - audit
+
+storage:
+  size: 5Gi

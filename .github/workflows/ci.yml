@@ -1,0 +1,82 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: ingestion-service
+            dir: apps/ingestion-service
+          - name: query-api
+            dir: apps/query-api
+          - name: retrieval-service
+            dir: apps/retrieval-service
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python tests
+        if: matrix.name != 'retrieval-service'
+        working-directory: ${{ matrix.dir }}
+        run: |
+          pipx install uv
+          uv python install 3.12
+          uv sync
+          uv run ruff check .
+          uv run pytest -q
+      - name: Go tests
+        if: matrix.name == 'retrieval-service'
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/retrieval-service/go.mod
+      - name: Go lint + test
+        if: matrix.name == 'retrieval-service'
+        working-directory: ${{ matrix.dir }}
+        run: |
+          test -z "$(gofmt -l .)"
+          go vet ./...
+          go test ./...
+
+  build-push:
+    if: github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - image: bulkhead-ingestion-service
+            context: apps/ingestion-service
+          - image: bulkhead-query-api
+            context: apps/query-api
+          - image: bulkhead-retrieval-service
+            context: apps/retrieval-service
+          - image: bulkhead-inference
+            context: apps/inference
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          platforms: linux/arm64,linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

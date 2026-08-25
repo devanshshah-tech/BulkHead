@@ -10,11 +10,16 @@ minio:
     size: 10Gi
 
 ollama:
+  enabled: true
+  image:
+    repository: ghcr.io/devanshshah-tech/bulkhead-inference
+    tag: latest
+  models:
+    baked: true
+    pull:
+      enabled: false
   storage:
     size: 20Gi
-  models:
-    pull:
-      enabled: true
 
 ingestion-service:
   image:

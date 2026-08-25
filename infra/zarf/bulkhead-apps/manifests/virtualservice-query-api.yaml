@@ -1,0 +1,31 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: query-api
+  namespace: bulkhead
+spec:
+  hosts:
+    - bulkhead.local
+    - bulkhead.localhost
+  gateways:
+    - bulkhead-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /query
+        - uri:
+            prefix: /graphql
+        - uri:
+            prefix: /healthz
+        - uri:
+            prefix: /readyz
+      route:
+        - destination:
+            host: query-api
+            port:
+              number: 8002
+      timeout: 120s
+      retries:
+        attempts: 2
+        perTryTimeout: 60s
+        retryOn: "503"

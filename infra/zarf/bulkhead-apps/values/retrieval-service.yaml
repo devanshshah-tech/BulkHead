@@ -1,0 +1,5 @@
+replicaCount: 1
+
+env:
+  RETRIEVAL_DATABASE_URL: postgresql://bulkhead_dev:bulkhead-dev-password@postgres:5432/vectors
+  RETRIEVAL_EMBED_ENDPOINT: http://ingestion-service:8001/internal/embeddings

@@ -1,0 +1,6 @@
+auth:
+  rootUser: bulkhead
+  rootPassword: bulkhead-dev-password
+
+storage:
+  size: 10Gi

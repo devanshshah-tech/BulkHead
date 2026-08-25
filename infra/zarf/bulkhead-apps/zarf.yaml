@@ -1,0 +1,63 @@
+kind: ZarfPackageConfig
+metadata:
+  name: bulkhead-apps
+  description: Application services of the Bulkhead RAG platform (ingestion, retrieval, query API) + mesh policies
+  version: 0.1.0
+
+components:
+  - name: istio-policies
+    required: true
+    manifests:
+      - name: peer-authentication
+        namespace: bulkhead
+        files:
+          - manifests/peer-authentication.yaml
+      - name: gateway
+        namespace: bulkhead
+        files:
+          - manifests/gateway.yaml
+      - name: virtualservices
+        namespace: bulkhead
+        files:
+          - manifests/virtualservice-ingestion.yaml
+          - manifests/virtualservice-query-api.yaml
+      - name: destinationrule
+        namespace: bulkhead
+        files:
+          - manifests/destinationrule-query-api.yaml
+
+  - name: ingestion-service
+    required: true
+    images:
+      - ghcr.io/devanshshah-tech/bulkhead-ingestion-service:latest
+    charts:
+      - name: ingestion-service
+        version: 0.1.0
+        namespace: bulkhead
+        localPath: ../../helm/ingestion-service
+        valuesFiles:
+          - values/ingestion-service.yaml
+
+  - name: retrieval-service
+    required: true
+    images:
+      - ghcr.io/devanshshah-tech/bulkhead-retrieval-service:latest
+    charts:
+      - name: retrieval-service
+        version: 0.1.0
+        namespace: bulkhead
+        localPath: ../../helm/retrieval-service
+        valuesFiles:
+          - values/retrieval-service.yaml
+
+  - name: query-api
+    required: true
+    images:
+      - ghcr.io/devanshshah-tech/bulkhead-query-api:latest
+    charts:
+      - name: query-api
+        version: 0.1.0
+        namespace: bulkhead
+        localPath: ../../helm/query-api
+        valuesFiles:
+          - values/query-api.yaml

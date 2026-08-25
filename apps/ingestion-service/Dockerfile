@@ -8,16 +8,24 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY src ./src
 RUN uv sync --frozen --no-dev
 
+# Bake the embedding model into the image so runtime never reaches HF Hub.
+ENV HF_HOME=/opt/hf-cache
+RUN uv run --no-sync python -c \
+    "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
+
 FROM python:3.12-slim
 
 RUN useradd -u 10001 -m app
 WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app/src /app/src
+COPY --from=builder --chown=app:app /opt/hf-cache /opt/hf-cache
 
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONPATH=/app/src \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    HF_HOME=/opt/hf-cache \
+    HF_HUB_OFFLINE=1
 
 USER app
 EXPOSE 8001

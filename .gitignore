@@ -45,3 +45,4 @@ tilt_state/
 !.env.example
 *.pem
 *.key
+bin/

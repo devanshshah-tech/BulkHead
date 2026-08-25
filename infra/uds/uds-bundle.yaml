@@ -1,0 +1,18 @@
+kind: UDSBundle
+metadata:
+  name: bulkhead-rag
+  description: Bulkhead — airgap-deployable RAG platform (data layer + local inference + app services)
+  version: 0.1.0
+
+packages:
+  - name: bulkhead-data
+    path: ../zarf/bulkhead-data
+    ref: 0.1.0
+
+  - name: bulkhead-inference
+    path: ../zarf/bulkhead-inference
+    ref: 0.1.0
+
+  - name: bulkhead-apps
+    path: ../zarf/bulkhead-apps
+    ref: 0.1.0
