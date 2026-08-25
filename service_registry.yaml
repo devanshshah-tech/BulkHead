@@ -1,0 +1,57 @@
+# Bulkhead service registry — single source of truth for deployment order.
+#
+# Services deploy top-to-bottom; within a layer, order is list order.
+# depends_on is informational documentation of the graph; the layer order
+# encodes the actual deployment sequence.
+#
+# Consumers:
+#   - hack/deploy-local.sh (APP_DEPLOY=1): ordered per-service Helm installs
+#   - infra/uds/uds-bundle.yaml: package order mirrors these layers
+#
+# Tilt does not consult this file — Kubernetes probes gate traffic there,
+# but the layer ordering mirrors what production-style deploys do.
+
+layers:
+  - name: data
+    description: stateful backing services
+    services:
+      - name: postgres
+        chart: infra/helm/postgres
+        values: infra/zarf/bulkhead-data/values/postgres.yaml
+        provides: vectors + audit databases
+      - name: minio
+        chart: infra/helm/minio
+        values: infra/zarf/bulkhead-data/values/minio.yaml
+        provides: object storage for raw docs
+      - name: lakefs
+        chart: infra/helm/lakefs
+        values: infra/zarf/bulkhead-data/values/lakefs.yaml
+        depends_on: [postgres]
+        provides: corpus versioning
+
+  - name: inference
+    description: local LLM serving
+    services:
+      - name: ollama
+        chart: infra/helm/ollama
+        values: infra/zarf/bulkhead-inference/values/ollama.yaml
+        provides: /api/generate
+
+  - name: apps
+    description: bulkhead application services
+    services:
+      - name: ingestion-service
+        chart: infra/helm/ingestion-service
+        values: infra/zarf/bulkhead-apps/values/ingestion-service.yaml
+        depends_on: [postgres, minio]
+        provides: /ingest, /internal/embeddings
+      - name: retrieval-service
+        chart: infra/helm/retrieval-service
+        values: infra/zarf/bulkhead-apps/values/retrieval-service.yaml
+        depends_on: [postgres, ingestion-service]
+        provides: gRPC Retrieve()
+      - name: query-api
+        chart: infra/helm/query-api
+        values: infra/zarf/bulkhead-apps/values/query-api.yaml
+        depends_on: [retrieval-service, ollama]
+        provides: /query, /graphql (public edge)
