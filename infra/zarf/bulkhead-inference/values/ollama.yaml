@@ -9,7 +9,7 @@ models:
 
 resources:
   requests:
-    cpu: "1"
-    memory: 4Gi
+    cpu: 250m
+    memory: 1Gi
   limits:
-    memory: 12Gi
+    memory: 8Gi

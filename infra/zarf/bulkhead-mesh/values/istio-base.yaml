@@ -1,0 +1,4 @@
+# Base chart only installs CRDs and cluster roles.
+global:
+  istioNamespace: istio-system
+defaultRevision: default

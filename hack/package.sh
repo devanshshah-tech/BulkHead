@@ -12,7 +12,7 @@ command -v uds >/dev/null || { echo "uds not found in ./bin" >&2; exit 1; }
 
 mkdir -p build
 
-for pkg in bulkhead-data bulkhead-inference bulkhead-apps; do
+for pkg in bulkhead-mesh bulkhead-data bulkhead-inference bulkhead-apps; do
   echo "==> zarf package create $pkg"
   zarf package create "infra/zarf/${pkg}" \
     -o "infra/zarf/${pkg}/" --skip-sbom --confirm

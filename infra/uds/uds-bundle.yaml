@@ -5,6 +5,10 @@ metadata:
   version: 0.1.0
 
 packages:
+  - name: bulkhead-mesh
+    path: ../zarf/bulkhead-mesh
+    ref: 0.1.0
+
   - name: bulkhead-data
     path: ../zarf/bulkhead-data
     ref: 0.1.0

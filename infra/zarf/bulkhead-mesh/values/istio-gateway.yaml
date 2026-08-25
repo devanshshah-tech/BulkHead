@@ -1,0 +1,20 @@
+# Ingress gateway for the bulkhead namespace.
+labels:
+  istio: ingressgateway
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    memory: 512Mi
+
+service:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: https
+      port: 443
+      targetPort: 8443

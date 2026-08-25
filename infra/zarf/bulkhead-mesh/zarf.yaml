@@ -1,0 +1,40 @@
+kind: ZarfPackageConfig
+metadata:
+  name: bulkhead-mesh
+  description: Istio service mesh (istiod + ingress gateway) so strict mTLS works fully offline
+  version: 0.1.0
+
+components:
+  - name: istio-base
+    required: true
+    charts:
+      - name: base
+        version: 1.30.3
+        namespace: istio-system
+        localPath: ../../vendor/istio/base
+        valuesFiles:
+          - values/istio-base.yaml
+
+  - name: istiod
+    required: true
+    images:
+      - docker.io/istio/pilot:1.30.3
+    charts:
+      - name: istiod
+        version: 1.30.3
+        namespace: istio-system
+        localPath: ../../vendor/istio/istiod
+        valuesFiles:
+          - values/istiod.yaml
+
+  - name: istio-ingress
+    required: true
+    images:
+      - docker.io/istio/proxyv2:1.30.3
+    charts:
+      - name: gateway
+        version: 1.30.3
+        namespace: istio-ingress
+        localPath: ../../vendor/istio/gateway
+        valuesFiles:
+          - values/istio-gateway.yaml
