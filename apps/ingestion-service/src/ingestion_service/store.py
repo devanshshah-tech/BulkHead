@@ -31,9 +31,22 @@ class VectorStore:
         self._dim = dim
         self._conn: psycopg.Connection | None = None
 
-    def connect(self) -> None:
+    def _ensure_conn(self) -> None:
+        if self._conn is not None:
+            try:
+                self._conn.execute("SELECT 1")
+                return
+            except psycopg.Error:
+                try:
+                    self._conn.close()
+                except psycopg.Error:
+                    pass
+                self._conn = None
         self._conn = psycopg.connect(self._url, autocommit=True)
         self._conn.execute(build_schema(self._dim))
+
+    def connect(self) -> None:
+        self._ensure_conn()
 
     def close(self) -> None:
         if self._conn is not None:
@@ -41,10 +54,8 @@ class VectorStore:
             self._conn = None
 
     def ping(self) -> bool:
-        if self._conn is None:
-            return False
         try:
-            self._conn.execute("SELECT 1")
+            self._ensure_conn()
             return True
         except psycopg.Error:
             return False
@@ -56,8 +67,7 @@ class VectorStore:
         chunks: list[tuple[str, list[float]]],
         corpus_commit: str,
     ) -> int:
-        if self._conn is None:
-            raise RuntimeError("vector store not connected")
+        self._ensure_conn()
         with self._conn.cursor() as cur:
             for content, embedding in chunks:
                 cur.execute(

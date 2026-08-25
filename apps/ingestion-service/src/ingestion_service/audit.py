@@ -21,9 +21,22 @@ class AuditLog:
         self._url = database_url
         self._conn: psycopg.Connection | None = None
 
-    def connect(self) -> None:
+    def _ensure_conn(self) -> None:
+        if self._conn is not None:
+            try:
+                self._conn.execute("SELECT 1")
+                return
+            except psycopg.Error:
+                try:
+                    self._conn.close()
+                except psycopg.Error:
+                    pass
+                self._conn = None
         self._conn = psycopg.connect(self._url, autocommit=True)
         self._conn.execute(SCHEMA)
+
+    def connect(self) -> None:
+        self._ensure_conn()
 
     def close(self) -> None:
         if self._conn is not None:
@@ -31,9 +44,8 @@ class AuditLog:
             self._conn = None
 
     def record_ingest(self, doc_id: str, source: str, chunks: int, corpus_commit: str) -> None:
-        if self._conn is None:
-            return
         try:
+            self._ensure_conn()
             self._conn.execute(
                 "INSERT INTO ingest_events (doc_id, source, chunks, corpus_commit)"
                 " VALUES (%s, %s, %s, %s)",

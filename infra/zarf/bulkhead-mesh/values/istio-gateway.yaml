@@ -1,4 +1,9 @@
 # Ingress gateway for the bulkhead namespace.
+global:
+  hub: docker.io/istio
+  tag: 1.30.3
+  istioNamespace: istio-system
+
 labels:
   istio: ingressgateway
 

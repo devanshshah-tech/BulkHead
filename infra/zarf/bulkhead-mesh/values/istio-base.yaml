@@ -1,4 +1,6 @@
 # Base chart only installs CRDs and cluster roles.
 global:
   istioNamespace: istio-system
+  hub: docker.io/istio
+  tag: 1.30.3
 defaultRevision: default
