@@ -1,18 +1,25 @@
 # Ollama with the model baked in, stripped to CPU-only.
+# Model blobs are pulled directly from registry.ollama.ai (no server needed at
+# build time — this keeps multi-arch builds deterministic under QEMU).
 # The CPU runner is compiled into /bin/ollama; every GPU library in the
-# upstream image (/usr/lib/ollama/*cuda*) is dead weight for our deployments.
-# Airgap deployments never touch a model registry.
+# upstream image is dead weight for our CPU-only deployments.
 FROM ollama/ollama:0.5.7 AS source
 
 ENV OLLAMA_MODELS=/models
 
-RUN /bin/ollama serve & \
-    SERVER_PID=$!; \
-    for i in $(seq 1 30); do curl -sf http://127.0.0.1:11434/api/tags >/dev/null && break; sleep 1; done; \
-    /bin/ollama pull llama3.2:3b; \
-    kill $SERVER_PID; \
-    wait $SERVER_PID 2>/dev/null || true; \
-    chmod -R g+rw /models
+RUN apt-get update && apt-get install -y --no-install-recommends jq ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /models/manifests/registry.ollama.ai/library/llama3.2 /models/blobs \
+    && curl -sfL \
+        -H 'Accept: application/vnd.docker.distribution.manifest.v2+json, application/vnd.ollama.image.manifest.v1+json' \
+        https://registry.ollama.ai/v2/library/llama3.2/manifests/3b \
+        -o /models/manifests/registry.ollama.ai/library/llama3.2/3b \
+    && jq -r '.config.digest, (.layers[] | .digest)' /models/manifests/registry.ollama.ai/library/llama3.2/3b \
+       | while read -r digest; do \
+           curl -sfL "https://registry.ollama.ai/v2/library/llama3.2/blobs/${digest}" \
+             -o "/models/blobs/$(echo "${digest}" | tr ':' '-')"; \
+         done \
+    && chmod -R g+rw /models
 
 FROM ubuntu:24.04
 
