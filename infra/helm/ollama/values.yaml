@@ -10,7 +10,7 @@ models:
   pull:
     enabled: true
   list:
-    - llama3.2:3b
+    - llama3.2:1b
 
 storage:
   size: 20Gi

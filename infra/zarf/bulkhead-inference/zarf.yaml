@@ -1,7 +1,7 @@
 kind: ZarfPackageConfig
 metadata:
   name: bulkhead-inference
-  description: Local LLM inference for Bulkhead — Ollama stripped to CPU-only with llama3.2:3b baked in
+  description: Local LLM inference for Bulkhead — Ollama stripped to CPU-only with llama3.2:1b baked in
   version: 0.1.0
 
 components:

@@ -9,7 +9,7 @@ class Settings(BaseSettings):
 
     inference_backend: str = "stub"
     ollama_url: str = "http://localhost:11434"
-    ollama_model: str = "llama3.2:3b"
+    ollama_model: str = "llama3.2:1b"
     ollama_timeout_seconds: float = 120.0
 
     audit_database_url: str = "postgresql://bulkhead:bulkhead@localhost:5432/audit"

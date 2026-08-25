@@ -12,9 +12,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends jq ca-certifica
     && mkdir -p /models/manifests/registry.ollama.ai/library/llama3.2 /models/blobs \
     && curl -sfL \
         -H 'Accept: application/vnd.docker.distribution.manifest.v2+json, application/vnd.ollama.image.manifest.v1+json' \
-        https://registry.ollama.ai/v2/library/llama3.2/manifests/3b \
-        -o /models/manifests/registry.ollama.ai/library/llama3.2/3b \
-    && jq -r '.config.digest, (.layers[] | .digest)' /models/manifests/registry.ollama.ai/library/llama3.2/3b \
+        https://registry.ollama.ai/v2/library/llama3.2/manifests/1b \
+        -o /models/manifests/registry.ollama.ai/library/llama3.2/1b \
+    && jq -r '.config.digest, (.layers[] | .digest)' /models/manifests/registry.ollama.ai/library/llama3.2/1b \
        | while read -r digest; do \
            curl -sfL "https://registry.ollama.ai/v2/library/llama3.2/blobs/${digest}" \
              -o "/models/blobs/$(echo "${digest}" | tr ':' '-')"; \

@@ -1,7 +1,7 @@
 # Base model for grounded answer generation (small enough for free-tier VMs).
 # Pulled at bundle-build time and shipped inside the Zarf package so the
 # airgapped deployment never needs to reach a model registry.
-FROM llama3.2:3b
+FROM llama3.2:1b
 
 PARAMETER temperature 0.2
 PARAMETER num_ctx 4096

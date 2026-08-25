@@ -95,7 +95,7 @@ Create `.mise.toml` pinning: python, go (if used), terraform, helm, kubectl, k3d
 - Optional: add a GraphQL endpoint alongside REST if you want to show both (`strawberry-graphql` is a clean choice) — don't over-engineer, one clean GraphQL query is enough to prove the skill
 
 ### 2.4 Inference
-- Run Ollama or vLLM serving a small open model (e.g. Llama 3.2 3B / Phi-3-mini) — small enough to run on a free-tier VM or even a laptop, which matters for the free-deployment phase later
+- Run Ollama or vLLM serving a small open model (e.g. Llama 3.2 1B / Phi-3-mini) — small enough to run on a free-tier VM or even a laptop, which matters for the free-deployment phase later
 
 ### 2.5 Containerize everything
 - One `Dockerfile` per service, multi-stage builds, non-root user, minimal base images (distroless or `python:slim`)
