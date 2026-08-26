@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
+import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 const pillars = [
@@ -22,11 +22,11 @@ export default function Home() {
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: '1rem', marginTop: '2rem' }}>
         {pillars.map((p) => (
-          <a key={p.to} href={p.to} style={{ border: '1px solid #e3e6ea', borderRadius: 12, padding: '1rem', textDecoration: 'none' }}>
+          <Link key={p.to} to={p.to} style={{ border: '1px solid #e3e6ea', borderRadius: 12, padding: '1rem', textDecoration: 'none' }}>
             <div style={{ fontSize: '1.6rem' }}>{p.emoji}</div>
             <h3 style={{ color: 'inherit' }}>{p.title}</h3>
             <p style={{ color: '#65727f' }}>{p.text}</p>
-          </a>
+          </Link>
         ))}
       </div>
     </main>
