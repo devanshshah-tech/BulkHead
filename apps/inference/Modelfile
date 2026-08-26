@@ -1,8 +1,25 @@
 # Base model for grounded answer generation (small enough for free-tier VMs).
-# Pulled at bundle-build time and shipped inside the Zarf package so the
-# airgapped deployment never needs to reach a model registry.
-FROM llama3.2:1b
+# Baked into the inference image at build time: the FROM path points at the
+# Q4_K_M GGUF downloaded by the Dockerfile, converted via `ollama create`.
+# Shipped inside the Zarf package so the airgapped deployment never needs to
+# reach a model registry.
+#
+# TEMPLATE/stop params are required here: bare-GGUF imports do NOT pick up
+# the tokenizer's embedded chat template in ollama 0.5.x, and without them
+# generation degrades to raw text completion.
+FROM /tmp/model.gguf
+
+TEMPLATE """<|begin_of_text|>{{ if .System }}<|start_header_id|>system<|end_header_id|>
+
+{{ .System }}<|eot_id|>{{ end }}{{ range .Messages }}<|start_header_id|>{{ .Role }}<|end_header_id|>
+
+{{ .Content }}<|eot_id|>{{ end }}<|start_header_id|>assistant<|end_header_id|>
+
+"""
 
 PARAMETER temperature 0.2
 PARAMETER num_ctx 4096
+PARAMETER stop "<|eot_id|>"
+PARAMETER stop "<|start_header_id|>"
+PARAMETER stop "<|end_header_id|>"
 SYSTEM Answer only from the provided context chunks and cite them as [n].
