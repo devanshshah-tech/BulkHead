@@ -7,8 +7,9 @@
 # system images (coredns, local-path-provisioner, metrics-server, pause) which
 # a stock cluster would otherwise try to pull at bootstrap.
 #
-# Usage: ./hack/deploy-airgap.sh [--yes]
-#   --yes  delete an existing 'airgap-sim' cluster without asking (wipes its PVCs)
+# Usage: ./hack/deploy-airgap.sh [--yes] [path/to/bundle.tar.zst]
+#   --yes                      delete an existing 'airgap-sim' cluster without asking (wipes its PVCs)
+#   positional bundle path     overrides the default local build output
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -18,6 +19,12 @@ export PATH="$ROOT/bin:$PATH"
 CLUSTER="airgap-sim"
 NET="airgap-none"
 BUNDLE="build/uds-bundle-bulkhead-rag-arm64-0.1.0.tar.zst"
+for arg in "$@"; do
+  case "$arg" in
+    --yes) ;;
+    *) BUNDLE="$arg" ;;
+  esac
+done
 
 SYSTEM_IMAGES=(
   "docker.io/rancher/local-path-provisioner:v0.0.36"
