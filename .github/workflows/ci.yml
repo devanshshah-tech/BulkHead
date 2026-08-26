@@ -100,8 +100,8 @@ jobs:
       - name: Install zarf + uds into ./bin (package.sh expects them there)
         run: |
           mkdir -p bin
-          curl -sfL -o bin/zarf https://github.com/zarf-dev/zarf/releases/download/v0.84.0/zarf_linux_amd64
-          curl -sfL -o bin/uds https://github.com/defenseunicorns/uds-cli/releases/download/v0.35.1/uds_linux_amd64
+          curl -sfL -o bin/zarf https://github.com/zarf-dev/zarf/releases/download/v0.84.0/zarf_v0.84.0_Linux_amd64
+          curl -sfL -o bin/uds https://github.com/defenseunicorns/uds-cli/releases/download/v0.35.1/uds-cli_v0.35.1_Linux_amd64
           chmod +x bin/zarf bin/uds
 
       - name: Build Zarf packages + UDS bundle
