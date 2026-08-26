@@ -1,4 +1,4 @@
-# Bulkhead
+# BulkHead
 
 > A production-style Retrieval-Augmented Generation platform designed to run fully disconnected. Ships as a single Zarf airgap bundle, deployed via ArgoCD GitOps, with mTLS-secured service mesh (Istio), reproducible dev tooling (mise), and versioned document corpora (lakeFS). Includes a live connected-mode demo and a downloadable airgap bundle you can run yourself.
 

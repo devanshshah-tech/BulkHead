@@ -9,14 +9,14 @@ Grounded question answering: retrieves top-k chunks via gRPC, generates an answe
 **Request**
 
 ```json
-{ "question": "What is Bulkhead?" }
+{ "question": "What is BulkHead?" }
 ```
 
 **Response `200`**
 
 ```json
 {
-  "answer": "Bulkhead deploys a RAG stack as a single UDS bundle… [1]",
+  "answer": "BulkHead deploys a RAG stack as a single UDS bundle… [1]",
   "citations": [
     { "chunk_id": "e2cd7ed7-…", "doc_id": "f3c22222-…",
       "source": "bulkhead-doc.txt", "content": "…" }

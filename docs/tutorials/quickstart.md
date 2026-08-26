@@ -1,6 +1,6 @@
 # Quickstart: from zero to a grounded answer
 
-Learn how to deploy Bulkhead's full RAG stack into a local Kubernetes cluster and ask it a question — with zero internet access at deploy time.
+Learn how to deploy BulkHead's full RAG stack into a local Kubernetes cluster and ask it a question — with zero internet access at deploy time.
 
 ## What you'll build
 
@@ -32,7 +32,7 @@ Everything — Postgres/pgvector, MinIO, lakeFS, Istio, Ollama with baked weight
 
 ```bash
 kubectl -n bulkhead port-forward svc/ingestion-service 8001:8001 &
-echo "Bulkhead is an airgap-deployable RAG platform." > doc.txt
+echo "BulkHead is an airgap-deployable RAG platform." > doc.txt
 curl -s -X POST localhost:8001/ingest -F file=@doc.txt
 ```
 
@@ -42,7 +42,7 @@ curl -s -X POST localhost:8001/ingest -F file=@doc.txt
 kubectl -n bulkhead port-forward svc/query-api 8002:8002 &
 curl -s -X POST localhost:8002/query \
   -H 'Content-Type: application/json' \
-  -d '{"question":"What is Bulkhead?"}'
+  -d '{"question":"What is BulkHead?"}'
 ```
 
 You get a grounded answer plus citations pointing at the ingested chunks.

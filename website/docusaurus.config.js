@@ -3,7 +3,7 @@ const lightCodeTheme = require('prism-react-renderer').themes.github;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Bulkhead',
+  title: 'BulkHead',
   tagline: 'An airgap-deployable RAG platform',
   // GitHub Pages project-site defaults; override via env for a custom domain.
   url: process.env.URL || 'https://devanshshah-tech.github.io',
@@ -32,7 +32,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Bulkhead',
+        title: 'BulkHead',
         items: [
           { to: '/docs/tutorials/quickstart', label: 'Quickstart', position: 'left' },
           {
@@ -55,7 +55,7 @@ const config = {
       },
       footer: {
         style: 'dark',
-        copyright: `Bulkhead — built to run where the internet isn't.`,
+        copyright: `BulkHead — built to run where the internet isn't.`,
       },
     }),
 };
