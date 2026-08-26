@@ -94,6 +94,12 @@ jobs:
     permissions:
       contents: write
       packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [amd64, arm64]
+    env:
+      ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v4
 
@@ -104,13 +110,13 @@ jobs:
           curl -sfL -o bin/uds https://github.com/defenseunicorns/uds-cli/releases/download/v0.35.1/uds-cli_v0.35.1_Linux_amd64
           chmod +x bin/zarf bin/uds
 
-      - name: Build Zarf packages + UDS bundle
+      - name: Build Zarf packages + UDS bundle (${{ matrix.arch }})
         run: ./hack/package.sh
 
       - name: Enforce GitHub Release asset cap (2GiB)
         run: |
           SIZE=$(stat -c%s build/uds-bundle-*.tar.zst)
-          echo "bundle size: $SIZE bytes"
+          echo "bundle size (${{ matrix.arch }}): $SIZE bytes"
           [ "$SIZE" -le 2147483648 ] || { echo "::error::bundle exceeds GitHub's 2GiB asset cap"; exit 1; }
 
       - name: Publish release with bundle
@@ -118,15 +124,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="${GITHUB_REF_NAME}"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" build/uds-bundle-*.tar.zst --clobber
-          else
-            gh release create "$TAG" build/uds-bundle-*.tar.zst \
-              --title "Bulkhead RAG ${TAG}" \
-              --notes "Airgap bundle: one-command deploy for disconnected clusters.
+          NOTES="Airgap bundle: one-command deploy for disconnected clusters.
 
           \`\`\`bash
           uds deploy uds-bundle-bulkhead-rag-<arch>-${TAG}.tar.zst --confirm
           \`\`\`
           "
-          fi
+          until gh release view "$TAG" >/dev/null 2>&1; do
+            gh release create "$TAG" --title "Bulkhead RAG ${TAG}" --notes "$NOTES" && break
+            sleep 20 # lost a create race to the other matrix leg; it exists now
+          done
+          gh release upload "$TAG" build/uds-bundle-*.tar.zst --clobber
