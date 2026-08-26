@@ -1,0 +1,15 @@
+{
+  "name": "bulkhead-docs",
+  "private": true,
+  "scripts": {
+    "build": "docusaurus build",
+    "start": "docusaurus start"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.5.0",
+    "@docusaurus/preset-classic": "^3.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "browserslist": { "production": [">0.5%", "not dead"], "development": ["last 1 chrome version"] }
+}
