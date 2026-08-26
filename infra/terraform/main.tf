@@ -1,13 +1,13 @@
 # Remote state on Terraform Cloud free tier.
-# Human prerequisite: create an org at app.terraform.io, generate an API token,
-# then `terraform login` locally. Uncomment and set your org name, rerun init.
-#
-# terraform {
-#   cloud {
-#     organization = "<your-tfc-org>"
-#     workspaces { name = "bulkhead-demo" }
-#   }
-# }
+# Prerequisite: `terraform login` once on this machine (stores API token).
+terraform {
+  cloud {
+    organization = "BulkHead"
+    workspaces {
+      name = "bulkhead-demo"
+    }
+  }
+}
 
 terraform {
   required_version = ">= 1.9"

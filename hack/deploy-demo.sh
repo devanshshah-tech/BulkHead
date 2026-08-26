@@ -6,7 +6,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-DEMO_URL="${DEMO_URL:-https://demo.example.com}"
+DEMO_URL="${DEMO_URL:-https://demo.bulkhead.cc}"
 
 echo "==> terraform apply"
 (
