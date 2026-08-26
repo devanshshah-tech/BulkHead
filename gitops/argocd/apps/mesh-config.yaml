@@ -1,0 +1,23 @@
+# Mesh traffic policy: Gateway, VirtualServices, DestinationRules (raw manifests).
+# Synced after the mesh itself so the CRDs exist.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mesh-config
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devanshshah-tech/BulkHead.git
+    targetRevision: main
+    path: infra/istio
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,34 @@
+# service.type=NodePort so cloudflared on the same VM can reach it via
+# localhost:<nodePort> (PHASE5.md step 6.5) — no cloud LoadBalancer needed.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-ingress
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devanshshah-tech/BulkHead.git
+    targetRevision: main
+    path: infra/vendor/istio/gateway
+    helm:
+      parameters:
+        - { name: global.hub, value: docker.io/istio }
+        - { name: global.tag, value: "1.30.3" }
+        - { name: global.istioNamespace, value: istio-system }
+        - { name: labels.istio, value: ingressgateway }
+        - { name: resources.requests.cpu, value: 50m }
+        - { name: resources.requests.memory, value: 128Mi }
+        - { name: resources.limits.memory, value: 512Mi }
+        - { name: service.type, value: NodePort }
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-ingress
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

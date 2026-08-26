@@ -1,0 +1,28 @@
+# The RAG platform itself: umbrella chart, connected-demo values
+# (ghcr.io images pulled directly — no Zarf packaging in this delivery mode).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bulkhead
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devanshshah-tech/BulkHead.git
+    targetRevision: main
+    path: infra/helm/bulkhead
+    helm:
+      releaseName: bulkhead
+      valueFiles:
+        - values-demo.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: bulkhead
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

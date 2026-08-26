@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istiod
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devanshshah-tech/BulkHead.git
+    targetRevision: main
+    path: infra/vendor/istio/istiod
+    helm:
+      parameters:
+        - { name: global.hub, value: docker.io/istio }
+        - { name: global.tag, value: "1.30.3" }
+        - { name: pilot.autoscaleMin, value: "1" }
+        - { name: pilot.autoscaleMax, value: "1" }
+        - { name: pilot.resources.requests.cpu, value: 100m }
+        - { name: pilot.resources.requests.memory, value: 512Mi }
+        - { name: global.proxy.resources.requests.cpu, value: 10m }
+        - { name: global.proxy.resources.requests.memory, value: 64Mi }
+        - { name: global.proxy.resources.limits.memory, value: 256Mi }
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

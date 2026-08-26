@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-base
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devanshshah-tech/BulkHead.git
+    targetRevision: main
+    path: infra/vendor/istio/base
+    helm:
+      parameters:
+        - { name: global.hub, value: docker.io/istio }
+        - { name: global.tag, value: "1.30.3" }
+        - { name: global.istioNamespace, value: istio-system }
+        - { name: defaultRevision, value: default }
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
