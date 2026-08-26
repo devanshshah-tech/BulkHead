@@ -17,9 +17,9 @@ tilt = "0.33"
 buf = "1.47"
 istioctl = "1.30"
 
-# Airgap packaging (versions to be re-verified when Phase 4 lands)
-"ubi:zarf-dev/zarf" = "0.58"
-"ubi:uds-cli/uds" = "0.30"
+# Airgap packaging
+"ubi:zarf-dev/zarf" = "0.84"
+"ubi:uds-cli/uds" = "0.35.1"
 "ubi:argoproj/argo-cd" = "2.14"
 
 [settings]

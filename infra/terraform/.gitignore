@@ -2,5 +2,8 @@
 *.tfstate
 *.tfstate.*
 crash.log
+apply-retry.log
+retry.pid
 tfplan
 terraform.tfvars
+retry.ip

@@ -3,6 +3,7 @@ name: ci
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
 
 permissions:
@@ -82,3 +83,50 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # Phase 5.1 / Tier 2: on a v* tag, package the airgap bundle and attach it
+  # to a GitHub Release. Runs after build-push so the bundle embeds the
+  # freshly published :latest images.
+  publish-bundle:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test, build-push]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install zarf + uds into ./bin (package.sh expects them there)
+        run: |
+          mkdir -p bin
+          curl -sfL -o bin/zarf https://github.com/zarf-dev/zarf/releases/download/v0.84.0/zarf_linux_amd64
+          curl -sfL -o bin/uds https://github.com/defenseunicorns/uds-cli/releases/download/v0.35.1/uds_linux_amd64
+          chmod +x bin/zarf bin/uds
+
+      - name: Build Zarf packages + UDS bundle
+        run: ./hack/package.sh
+
+      - name: Enforce GitHub Release asset cap (2GiB)
+        run: |
+          SIZE=$(stat -c%s build/uds-bundle-*.tar.zst)
+          echo "bundle size: $SIZE bytes"
+          [ "$SIZE" -le 2147483648 ] || { echo "::error::bundle exceeds GitHub's 2GiB asset cap"; exit 1; }
+
+      - name: Publish release with bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" build/uds-bundle-*.tar.zst --clobber
+          else
+            gh release create "$TAG" build/uds-bundle-*.tar.zst \
+              --title "Bulkhead RAG ${TAG}" \
+              --notes "Airgap bundle: one-command deploy for disconnected clusters.
+
+          \`\`\`bash
+          uds deploy uds-bundle-bulkhead-rag-<arch>-${TAG}.tar.zst --confirm
+          \`\`\`
+          "
+          fi
