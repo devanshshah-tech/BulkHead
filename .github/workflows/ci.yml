@@ -110,6 +110,12 @@ jobs:
           curl -sfL -o bin/uds https://github.com/defenseunicorns/uds-cli/releases/download/v0.35.1/uds-cli_v0.35.1_Linux_amd64
           chmod +x bin/zarf bin/uds
 
+      - name: Stamp tag version into package/bundle metadata
+        run: |
+          VER="${GITHUB_REF_NAME#v}"
+          sed -i "s/^  version: .*/  version: ${VER}/" infra/zarf/*/zarf.yaml infra/uds/*.yaml
+          grep -H "^  version:" infra/zarf/*/zarf.yaml infra/uds/*.yaml
+
       - name: Build Zarf packages + UDS bundle (${{ matrix.arch }})
         run: ./hack/package.sh
 
