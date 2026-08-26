@@ -5,8 +5,9 @@ const lightCodeTheme = require('prism-react-renderer').themes.github;
 const config = {
   title: 'Bulkhead',
   tagline: 'An airgap-deployable RAG platform',
-  url: 'https://demo.bulkhead.cc',
-  baseUrl: '/',
+  // GitHub Pages project-site defaults; override via env for a custom domain.
+  url: process.env.URL || 'https://devanshshah-tech.github.io',
+  baseUrl: process.env.BASE_URL || '/BulkHead/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   organizationName: 'devanshshah-tech',
