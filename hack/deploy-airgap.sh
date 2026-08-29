@@ -80,6 +80,10 @@ echo "==> seeded ${#SYSTEM_IMAGES[@]} system images into the node"
 # ---------------------------------------------------------------------------
 # 5. Deploy the platform — only from the bundle
 # ---------------------------------------------------------------------------
+if ! kubectl -n zarf get secret zarf-state >/dev/null 2>&1; then
+  echo "==> zarf init"
+  zarf init --confirm >/dev/null
+fi
 echo "==> uds deploy"
 uds deploy "$BUNDLE" --confirm --no-log-file
 
