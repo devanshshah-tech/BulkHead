@@ -73,9 +73,8 @@ done
 # ---------------------------------------------------------------------------
 k3d cluster create "$CLUSTER" \
   --network "$NET" \
-  --no-lb \
-  --disable=traefik \
-  -p "31999:31999@server:0" >/dev/null
+  --k3s-arg '--disable=traefik@server:0' \
+  -p "31999:31999@loadbalancer" >/dev/null
 
 kubectl config use-context "k3d-$CLUSTER" >/dev/null
 echo "==> cluster '$CLUSTER' up (no outbound internet)"

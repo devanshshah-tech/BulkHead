@@ -46,3 +46,7 @@ tilt_state/
 *.pem
 *.key
 bin/
+
+# Local planning docs (not for public repo)
+PLAN.md
+PHASE5.md
