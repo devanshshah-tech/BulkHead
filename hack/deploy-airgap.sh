@@ -18,7 +18,7 @@ export PATH="$ROOT/bin:$PATH"
 
 CLUSTER="airgap-sim"
 NET="airgap-none"
-BUNDLE="build/uds-bundle-bulkhead-rag-arm64-0.1.0.tar.zst"
+BUNDLE="build/uds-bundle-bulkhead-rag-arm64-0.1.1.tar.zst"
 for arg in "$@"; do
   case "$arg" in
     --yes) ;;
