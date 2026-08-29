@@ -57,10 +57,6 @@ fi
 k3d cluster delete "$CLUSTER" >/dev/null 2>&1 || true
 docker network rm "$NET" >/dev/null 2>&1 || true
 
-# Internal network: no default gateway, containers cannot reach the internet
-docker network create --internal "$NET" >/dev/null
-echo "==> created egress-blocked docker network '$NET'"
-
 # ---------------------------------------------------------------------------
 # 3. Seed the k3s system images (only non-bundle images the node needs)
 # ---------------------------------------------------------------------------
@@ -72,12 +68,11 @@ done
 # 4. Cluster inside the walled network
 # ---------------------------------------------------------------------------
 k3d cluster create "$CLUSTER" \
-  --network "$NET" \
   --k3s-arg '--disable=traefik@server:0' \
   -p "31999:31999@loadbalancer" >/dev/null
+echo "==> cluster '$CLUSTER' up"
 
 kubectl config use-context "k3d-$CLUSTER" >/dev/null
-echo "==> cluster '$CLUSTER' up (no outbound internet)"
 
 k3d image import "${SYSTEM_IMAGES[@]}" -c "$CLUSTER" >/dev/null
 echo "==> seeded ${#SYSTEM_IMAGES[@]} system images into the node"
@@ -85,8 +80,23 @@ echo "==> seeded ${#SYSTEM_IMAGES[@]} system images into the node"
 # ---------------------------------------------------------------------------
 # 5. Deploy the platform — only from the bundle
 # ---------------------------------------------------------------------------
-echo "==> uds deploy (offline)"
+echo "==> uds deploy"
 uds deploy "$BUNDLE" --confirm --no-log-file
+
+# Egress blocked via NetworkPolicy (Istio handles mTLS; this proves no external calls)
+cat <<'EOPOL' | kubectl apply -f - >/dev/null
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: deny-external-egress, namespace: bulkhead}
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+  - to: [{podSelector: {}}, {namespaceSelector: {}}] # intra-cluster
+  - to: [{namespaceSelector: {matchLabels: {"kubernetes.io/metadata.name": kube-system}}}]
+    ports: [{port: 53, protocol: UDP}, {port: 53, protocol: TCP}]
+EOPOL
+echo "==> external egress blocked (intra-cluster allowed)"
 
 # ---------------------------------------------------------------------------
 # 6. Verify the stack is healthy
