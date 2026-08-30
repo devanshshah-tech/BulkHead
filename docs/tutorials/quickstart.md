@@ -49,5 +49,5 @@ You get a grounded answer plus citations pointing at the ingested chunks.
 
 ## Next steps
 
-- Run the fully egress-blocked version: [Prove the airgap](./airgap-proof)
-- Understand what got deployed: [Architecture](../explanation/architecture)
+- Run the fully egress-blocked version: [Prove the airgap](./airgap-proof.md)
+- Understand what got deployed: [Architecture](../explanation/architecture.md)

@@ -8,10 +8,15 @@ const config = {
   // GitHub Pages project-site defaults; override via env for a custom domain.
   url: process.env.URL || 'https://devanshshah-tech.github.io',
   baseUrl: process.env.BASE_URL || '/BulkHead/',
+  trailingSlash: false,
   onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
   organizationName: 'devanshshah-tech',
   projectName: 'BulkHead',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
   presets: [
     [
       'classic',

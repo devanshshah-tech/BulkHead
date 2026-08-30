@@ -8,7 +8,7 @@ Milvus/Qdrant are heavier, stateful, and bring their own operational surface —
 
 ## Ollama with baked Q4_K_M, not a bigger model
 
-The constraint isn't taste, it's arithmetic: free-tier ARM VMs and developer laptops have ~8–24 GB RAM, GitHub Release assets cap at 2 GiB per file, and airgapped clusters cannot pull weights at deploy time. Baking llama3.2:1b **Q4_K_M** (~805 MB, higher fidelity than the registry's q4_0) into a CPU-only Ollama image satisfies all three simultaneously. The Modelfile carries an explicit chat template because bare-GGUF imports don't inherit one in ollama 0.5.x — a subtle failure mode we hit and documented in [swap-the-model](../how-to/swap-the-model).
+The constraint isn't taste, it's arithmetic: free-tier ARM VMs and developer laptops have ~8–24 GB RAM, GitHub Release assets cap at 2 GiB per file, and airgapped clusters cannot pull weights at deploy time. Baking llama3.2:1b **Q4_K_M** (~805 MB, higher fidelity than the registry's q4_0) into a CPU-only Ollama image satisfies all three simultaneously. The Modelfile carries an explicit chat template because bare-GGUF imports don't inherit one in ollama 0.5.x — a subtle failure mode we hit and documented in [swap-the-model](../how-to/swap-the-model.md).
 
 ## Zarf/UDS packaging
 

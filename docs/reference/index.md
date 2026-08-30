@@ -3,8 +3,8 @@ title: Reference
 sidebar_position: -1
 ---
 
-Information-oriented technical descriptions:
+Information-oriented technical specifications and contracts:
 
-- [REST APIs](./api)
-- [mise tasks, bundle contents, CI pipeline](./tasks-and-bundle)
-
+- [REST & gRPC APIs](./api.md)
+- [Configuration & Environment Variables](./configuration.md)
+- [`mise` Tasks, Bundle Contents & CI Pipeline](./tasks-and-bundle.md)
