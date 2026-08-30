@@ -12,10 +12,10 @@ class Settings(BaseSettings):
     s3_access_key: str = "bulkhead"
     s3_secret_key: str = "bulkhead-secret"
 
-    lakefs_enabled: bool = False
-    lakefs_endpoint: str = "http://localhost:8002"
-    lakefs_access_key: str = ""
-    lakefs_secret_key: str = ""
+    lakefs_enabled: bool = True
+    lakefs_endpoint: str = "http://lakefs:8000"
+    lakefs_access_key: str = "bulkhead"
+    lakefs_secret_key: str = "bulkhead-dev-password"
     lakefs_repo: str = "corpus"
     lakefs_branch: str = "main"
 

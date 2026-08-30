@@ -4,6 +4,7 @@ import psycopg
 
 logger = logging.getLogger(__name__)
 
+
 def build_schema(dim: int) -> str:
     return f"""
 CREATE EXTENSION IF NOT EXISTS vector;

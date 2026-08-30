@@ -23,7 +23,9 @@ ollama:
 ingestion-service:
   env:
     BULKHEAD_INGEST_EMBEDDER_BACKEND: sentence-transformers
-    BULKHEAD_INGEST_LAKEFS_ENABLED: "false"
+    BULKHEAD_INGEST_LAKEFS_ENABLED: "true"
+    BULKHEAD_INGEST_LAKEFS_ENDPOINT: "http://lakefs:8000"
+    BULKHEAD_INGEST_LAKEFS_REPO: "corpus"
 
 retrieval-service:
   env:
